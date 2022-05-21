@@ -28,8 +28,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Environment variable, set and make random secured key
-# os.environ["SECRET_KEY"] = secrets.token_hex()
-# app.secret_key = os.environ["SECRET_KEY"]
+os.environ["SECRET_KEY"] = secrets.token_hex()
+app.secret_key = os.environ["SECRET_KEY"]
 
 # Create LoginManager class
 login_manager = LoginManager()
