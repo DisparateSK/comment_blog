@@ -20,7 +20,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 ckeditor = CKEditor(app)
 Bootstrap(app)
-gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
+gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False,
+                    base_url=None)
 ##CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -40,17 +41,21 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(user_id)
 
+
 # decorator admin_only
 def admin_oly(f):
     @wraps(f)
     def admin_one(*args, **kwargs):
-        if current_user.is_authenticated and current_user.id ==1:
+        if current_user.is_authenticated and current_user.id == 1:
             return f(*args, **kwargs)
         else:
             abort(403)
+
     return admin_one
+
+
 ##CONFIGURE TABLES
-class User(UserMixin,db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
@@ -58,6 +63,8 @@ class User(UserMixin,db.Model):
     email = db.Column(db.String(250), nullable=False)
     posts = relationship("BlogPost", back_populates="author")
     comments = relationship("Comment", back_populates="comment_author")
+
+
 class BlogPost(db.Model):
     __tablename__ = "blog_posts"
     id = db.Column(db.Integer, primary_key=True)
@@ -66,18 +73,20 @@ class BlogPost(db.Model):
     date = db.Column(db.String(250), nullable=False)
     body = db.Column(db.Text, nullable=False)
     img_url = db.Column(db.String(250), nullable=False)
-    author_id = db.Column(db.Integer,  db.ForeignKey("users.id"))
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     author = relationship("User", back_populates="posts")
     comments = relationship("Comment", back_populates="parent_post")
+
 
 class Comment(db.Model):
     __tablename__ = "comments"
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(250), nullable=False)
-    author_id = db.Column(db.Integer,  db.ForeignKey("users.id"))
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     comment_author = relationship("User", back_populates="comments")
     post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
     parent_post = relationship("BlogPost", back_populates="comments")
+
 
 db.create_all()
 
@@ -94,7 +103,7 @@ def register():
     if form.validate_on_submit():
         if User.query.filter_by(email=form.email.data).first():
             form = RegisterForm()
-            return render_template("login.html",error="This email is already exist", form=form)
+            return render_template("login.html", error="This email is already exist", form=form)
         else:
             hash_pass = generate_password_hash(form.password.data, salt_length=8)
             new_user = User(
@@ -144,7 +153,7 @@ def show_post(post_id):
         new_comment = Comment(
             text=form.comment_txt.data,
             comment_author=current_user,
-            parent_post = requested_post
+            parent_post=requested_post
         )
         db.session.add(new_comment)
         db.session.commit()
@@ -163,7 +172,7 @@ def contact():
     return render_template("contact.html")
 
 
-@app.route("/new-post", methods=['get','post'])
+@app.route("/new-post", methods=['get', 'post'])
 def add_new_post():
     form = CreatePostForm()
     if form.validate_on_submit():
@@ -200,7 +209,7 @@ def edit_post(post_id):
         db.session.commit()
         return redirect(url_for("show_post", post_id=post.id))
 
-    return render_template("make-post.html", form=edit_form,current_user=current_user)
+    return render_template("make-post.html", form=edit_form, current_user=current_user)
 
 
 @app.route("/delete/<int:post_id>", methods=['get', 'post'])
