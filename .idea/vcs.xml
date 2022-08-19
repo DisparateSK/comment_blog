@@ -3,5 +3,10 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/python-getting-started" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../pythonProject/progect1" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../pythonProject/project2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../pythonProject/project3" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../pythonProject/project4" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../pythonProject/telegram" vcs="Git" />
   </component>
 </project>
